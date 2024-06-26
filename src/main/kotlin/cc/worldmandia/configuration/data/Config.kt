@@ -1,5 +1,8 @@
 package cc.worldmandia.configuration.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Config(
     val menuCommandName: String = "menu",
     val durationInSeconds: Long = 60,

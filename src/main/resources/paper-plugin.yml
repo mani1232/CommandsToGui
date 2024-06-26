@@ -11,4 +11,3 @@ prefix: CTG
 load: STARTUP
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:2.0.0
-  - com.charleskorn.kaml:kaml-jvm:0.60.0

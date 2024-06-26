@@ -17,7 +17,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
-    compileOnly("com.charleskorn.kaml:kaml-jvm:0.60.0")
+    implementation("com.charleskorn.kaml:kaml-jvm:0.60.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.1")
     implementation("com.mattmx:ktgui:2.4.0")
 }
