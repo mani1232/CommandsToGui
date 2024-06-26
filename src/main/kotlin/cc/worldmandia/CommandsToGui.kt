@@ -1,5 +1,7 @@
 package cc.worldmandia
 
+import cc.worldmandia.commands.guiCommand
+import cc.worldmandia.events.commandInputEvent
 import com.mattmx.ktgui.GuiManager
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -19,9 +21,5 @@ class CommandsToGui: JavaPlugin() {
         GuiManager.guiConfigManager.setConfigFile<CommandsToGui>(config)
         commandInputEvent()
         guiCommand()
-    }
-
-    override fun onDisable() {
-
     }
 }

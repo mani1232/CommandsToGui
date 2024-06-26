@@ -1,4 +1,4 @@
-package cc.worldmandia
+package cc.worldmandia.events
 
 import cc.worldmandia.CommandsToGui.Companion.plugin
 import com.mattmx.ktgui.dsl.event

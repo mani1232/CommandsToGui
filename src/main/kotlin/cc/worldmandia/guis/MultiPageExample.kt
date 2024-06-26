@@ -1,10 +1,9 @@
-package cc.worldmandia
+package cc.worldmandia.guis
 
 import com.mattmx.ktgui.components.screen.GuiMultiPageScreen
 import com.mattmx.ktgui.dsl.button
 import com.mattmx.ktgui.utils.not
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 
 

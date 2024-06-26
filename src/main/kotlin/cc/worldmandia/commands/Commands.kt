@@ -1,5 +1,6 @@
-package cc.worldmandia
+package cc.worldmandia.commands
 
+import cc.worldmandia.guis.MultiPageExample
 import com.mattmx.ktgui.commands.rawCommand
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
