@@ -1,4 +1,3 @@
 package cc.worldmandia
 
-class CTGPluginBootstrap {
-}
+class CTGPluginBootstrap

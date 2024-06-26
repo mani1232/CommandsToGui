@@ -1,20 +1,44 @@
 package cc.worldmandia.guis
 
+import cc.worldmandia.CommandsToGui.Companion.plugin
+import cc.worldmandia.configuration.ConfigUtils
+import cc.worldmandia.configuration.data.DataSave
 import com.mattmx.ktgui.components.screen.GuiMultiPageScreen
 import com.mattmx.ktgui.dsl.button
 import com.mattmx.ktgui.utils.not
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
-class MultiPageExample : GuiMultiPageScreen(!"Multi-page Example", 6, maxPages = 9) {
+class MultiPageExample(player: Player) : GuiMultiPageScreen(!"Multi-page Example", 6, maxPages = 5) {
+
+    private val cooldownList = mutableListOf<UUID>()
+
     init {
-        Material.values().forEach { material ->
-            this += button(material) {
+        ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.forEach { commandName ->
+            val item = ConfigUtils.dataSave.commandsData[commandName] ?: throw Exception("Command $commandName not found")
+            this += button(Material.getMaterial(item.material) ?: Material.STONE) {
                 click {
-                    any { player.sendMessage(!"&bYou clicked item &3&l${material.name}") }
+                    any {
+                        if (!cooldownList.contains(player.uniqueId) || player.hasPermission("ctg.bypass")) {
+                            plugin.server.dispatchCommand(
+                                if (item.commandExecuteType == DataSave.CommandExecuteType.PLAYER) player else plugin.server.consoleSender,
+                                if (item.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) commandName.substring(1) else commandName
+                            )
+                            cooldownList.add(player.uniqueId)
+                            plugin.server.asyncScheduler.runDelayed(plugin, {
+                                cooldownList.remove(player.uniqueId)
+                            }, ConfigUtils.config.durationInSeconds, TimeUnit.SECONDS)
+                        } else {
+                            player.sendMessage(!"You need wait 60 sec")
+                        }
+                    }
                 }
-                named(!"&b&l${material.name}")
+                named(!(item.displayName ?: " "))
+                lore(!(item.itemLore ?: " "))
             }
         }
         button(Material.GRAY_STAINED_GLASS_PANE) {

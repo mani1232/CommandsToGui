@@ -1,4 +1,3 @@
 package cc.worldmandia
 
-class CTGPluginLoader {
-}
+class CTGPluginLoader
