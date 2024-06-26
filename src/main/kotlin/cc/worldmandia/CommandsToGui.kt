@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class CommandsToGui : JavaPlugin() {
 
-    private val configFile = File(dataFolder, "config.yml")
+    private val configFile = File(dataFolder, "modernConfig.yml")
     private val dataFile = File(dataFolder, "data.yml")
 
     companion object {
@@ -31,13 +31,12 @@ class CommandsToGui : JavaPlugin() {
         ConfigUtils.dataSave = ConfigUtils.load(dataFile, DataSave())
 
         commandRegex = Regex(ConfigUtils.config.commandsRegex)
-
-        server.asyncScheduler.runAtFixedRate(plugin, {
-            ConfigUtils.update(dataFile, ConfigUtils.dataSave)
-        }, ConfigUtils.config.saveDataEveryXMinutes, ConfigUtils.config.saveDataEveryXMinutes, TimeUnit.MINUTES)
     }
 
     override fun onEnable() {
+        server.asyncScheduler.runAtFixedRate(plugin, {
+            ConfigUtils.update(dataFile, ConfigUtils.dataSave)
+        }, ConfigUtils.config.saveDataEveryXMinutes, ConfigUtils.config.saveDataEveryXMinutes, TimeUnit.MINUTES)
         GuiManager.init(this)
         GuiManager.guiConfigManager.setConfigFile<CommandsToGui>(config)
 

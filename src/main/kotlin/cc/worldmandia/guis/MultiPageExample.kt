@@ -40,8 +40,12 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!"Multi-page Example
                         }
                     }
                 }
-                named(!(item.displayName ?: " "))
-                lore(!(item.itemLore ?: " "))
+                if (item.displayName != null) {
+                    named(!item.displayName!!)
+                }
+                if (item.itemLore != null) {
+                    lore(!item.itemLore!!)
+                }
             }
         }
         button(Material.GRAY_STAINED_GLASS_PANE) {
