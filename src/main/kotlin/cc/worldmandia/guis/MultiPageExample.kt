@@ -19,14 +19,17 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!"Multi-page Example
 
     init {
         ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.forEach { commandName ->
-            val item = ConfigUtils.dataSave.commandsData[commandName] ?: throw Exception("Command $commandName not found")
+            val item =
+                ConfigUtils.dataSave.commandsData[commandName] ?: throw Exception("Command $commandName not found")
             this += button(Material.getMaterial(item.material) ?: Material.STONE) {
                 click {
                     any {
                         if (!cooldownList.contains(player.uniqueId) || player.hasPermission("ctg.bypass")) {
                             plugin.server.dispatchCommand(
                                 if (item.commandExecuteType == DataSave.CommandExecuteType.PLAYER) player else plugin.server.consoleSender,
-                                if (item.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) commandName.substring(1) else commandName
+                                if (item.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) commandName.substring(
+                                    1
+                                ) else commandName
                             )
                             cooldownList.add(player.uniqueId)
                             plugin.server.asyncScheduler.runDelayed(plugin, {
