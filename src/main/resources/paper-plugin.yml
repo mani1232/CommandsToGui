@@ -1,0 +1,16 @@
+name: CommandsToGui
+version: '1.0'
+main: cc.worldmandia.CommandsToGui
+description: CommandToGui
+api-version: '1.20'
+#bootstrapper: cc.worldmandia.CTGPluginBootstrap
+#loader: cc.worldmandia.CTGPluginLoader
+author: mani1232
+website: https://discord.worldmandia.cc
+prefix: CTG
+load: STARTUP
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:2.0.0
+  - com.charleskorn.kaml:kaml-jvm:0.60.0
+  - org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.0
+  - dev.triumphteam:triumph-gui:3.1.10
