@@ -1,6 +1,5 @@
 package cc.worldmandia.commands
 
-import cc.worldmandia.CommandsToGui.Companion.plugin
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.guis.MultiPageExample
@@ -13,6 +12,7 @@ import com.mattmx.ktgui.conversation.refactor.getEnum
 import com.mattmx.ktgui.conversation.refactor.getString
 import com.mattmx.ktgui.utils.not
 import org.bukkit.Material
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 fun guiCommand() = rawCommand(ConfigUtils.config.menuCommandName) {
@@ -25,12 +25,42 @@ fun guiCommand() = rawCommand(ConfigUtils.config.menuCommandName) {
     }
 }.register(false)
 
-fun editItemCommand() = "ctg"<Player> {
+fun editItemCommand() = "ctg"<CommandSender> {
     buildAutomaticPermissions("ctg.command")
     val commandName by argument<String>("name", true)
+    val player by argument<Player>("player")
 
     runs {
-        sender.sendMessage("editing item...")
+        sender.sendMessage("Main command")
+    }
+
+    subcommand<CommandSender>("force") {
+
+        subcommand<CommandSender>("add" / player / commandName) {
+            commandName suggests { ConfigUtils.dataSave.commandsData.keys.toList() }
+
+            runs {
+                val cmd = commandName()
+                ConfigUtils.dataSave.playerData.getOrPut(player().uniqueId.toString()) { mutableListOf() }.add(cmd)
+                ConfigUtils.dataSave.commandsData.putIfAbsent(cmd, DataSave.CustomGuiItem())
+                sender.sendMessage("Force added")
+            }
+        }
+
+        subcommand<CommandSender>("remove" / player / commandName) {
+            commandName suggests { ConfigUtils.dataSave.commandsData.keys.toList() }
+
+            runs {
+                val cmd = commandName()
+                ConfigUtils.dataSave.playerData.getOrPut(player().uniqueId.toString()) { mutableListOf() }.remove(cmd)
+                sender.sendMessage("Force removed")
+            }
+        }
+
+        runs {
+            sender.sendMessage("Force command")
+        }
+
     }
 
     subcommand<Player>("editItem" / commandName) {
