@@ -13,7 +13,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class MultiPageExample(player: Player) : GuiMultiPageScreen(!"Multi-page Example", 6, maxPages = 5) {
+class MultiPageExample(player: Player) : GuiMultiPageScreen(!ConfigUtils.config.menuTitle, 6, maxPages = 5) {
 
     private val cooldownList = mutableListOf<UUID>()
 
@@ -52,26 +52,26 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!"Multi-page Example
             named(!" ") slots (0..8).toList() + (45..53).toList()
         }
         val currentPage =
-            button(Material.COMPASS) { named(!"&9&lPage ${getCurrentPage()}") slot 49 }
+            button(Material.COMPASS) { named(!"${ConfigUtils.config.page} ${getCurrentPage()}") slot 49 }
         button(Material.ARROW) {
             click {
                 ClickType.LEFT {
                     gotoNextPage(player)
-                    currentPage named !"&9&lPage ${getCurrentPage()}"
+                    currentPage named !"${ConfigUtils.config.page} ${getCurrentPage()}"
                     currentPage.update(player)
                 }
             }
-            named(!"&bNext Page") slot 53
+            named(!ConfigUtils.config.nextPage) slot 53
         }
         button(Material.ARROW) {
             click {
                 ClickType.LEFT {
                     gotoPrevPage(player)
-                    currentPage named !"&9&lPage ${getCurrentPage()}"
+                    currentPage named !"${ConfigUtils.config.page} ${getCurrentPage()}"
                     currentPage.update(player)
                 }
             }
-            named(!"&bPrev Page") slot 45
+            named(!ConfigUtils.config.prevPage) slot 45
         }
     }
 }

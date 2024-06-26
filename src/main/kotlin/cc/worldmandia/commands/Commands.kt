@@ -1,5 +1,6 @@
 package cc.worldmandia.commands
 
+import cc.worldmandia.CommandsToGui.Companion.plugin
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.guis.MultiPageExample
@@ -41,15 +42,21 @@ fun editItemCommand() = "ctg"<Player> {
                 val newItemData = DataSave.CustomGuiItem()
                 conversation<Player> {
                     exitOn = "cancel"
+
+                    exit {
+                        ConfigUtils.dataSave.commandsData[cmdName] = newItemData
+                    }
+
+                    start {
+                        sender.sendMessage("Start editing item...")
+                    }
+
                     getString {
                         message = !"&7Please input a item name"
                         matches { result.isPresent }
                         runs {
                             newItemData.displayName = result.get()
                             conversable.sendMessage(!"&7Item name updated")
-                        }
-                        invalid {
-                            conversable.sendMessage(!"&cThat item name is invalid!")
                         }
                     }
 
@@ -60,9 +67,6 @@ fun editItemCommand() = "ctg"<Player> {
                             newItemData.itemLore = result.get()
                             conversable.sendMessage(!"&7Item lore updated")
                         }
-                        invalid {
-                            conversable.sendMessage(!"&cThat item lore is invalid!")
-                        }
                     }
 
                     getEnum<Material, Player> {
@@ -71,9 +75,6 @@ fun editItemCommand() = "ctg"<Player> {
                         runs {
                             newItemData.material = result.get().toString()
                             conversable.sendMessage(!"&7Item material updated")
-                        }
-                        invalid {
-                            conversable.sendMessage(!"&cThat material is invalid!")
                         }
                     }
 
@@ -84,11 +85,8 @@ fun editItemCommand() = "ctg"<Player> {
                             newItemData.commandExecuteType = result.get()
                             conversable.sendMessage(!"&7Item CommandExecuteType updated")
                         }
-                        invalid {
-                            conversable.sendMessage(!"&cThat CommandExecuteType is invalid!")
-                        }
                     }
-                }
+                } timeout 60 begin sender
                 ConfigUtils.dataSave.commandsData[cmdName] = newItemData
             }
 
