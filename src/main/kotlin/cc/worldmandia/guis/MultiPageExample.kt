@@ -9,13 +9,15 @@ import com.mattmx.ktgui.utils.not
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class MultiPageExample(player: Player) : GuiMultiPageScreen(!ConfigUtils.config.menuTitle, 6, maxPages = 5) {
 
-    private val cooldownList = mutableListOf<UUID>()
+    companion object {
+        private val cooldownList = mutableListOf<UUID>()
+    }
 
     init {
         ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.forEach { commandName ->
@@ -32,9 +34,7 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!ConfigUtils.config.
                                 ) else commandName
                             )
                             cooldownList.add(player.uniqueId)
-                            plugin.server.asyncScheduler.runDelayed(plugin, {
-                                cooldownList.remove(player.uniqueId)
-                            }, ConfigUtils.config.durationInSeconds, TimeUnit.SECONDS)
+                            plugin.server.scheduler.runTaskTimerAsynchronously(plugin, RemoveTask(player), ConfigUtils.config.cooldownInTicks, ConfigUtils.config.cooldownInTicks)
                         } else {
                             player.sendMessage(!"You need wait 60 sec")
                         }
@@ -73,5 +73,12 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!ConfigUtils.config.
             }
             named(!ConfigUtils.config.prevPage) slot 45
         }
+    }
+
+    class RemoveTask(private val player: Player) : BukkitRunnable() {
+        override fun run() {
+            cooldownList.remove(player.uniqueId)
+        }
+
     }
 }

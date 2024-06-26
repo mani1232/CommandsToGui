@@ -8,15 +8,15 @@ import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.events.commandInputEvent
 import com.mattmx.ktgui.GuiManager
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class CommandsToGui : JavaPlugin() {
 
-    private val configFile = File(dataFolder, "modernConfig.yml")
-    private val dataFile = File(dataFolder, "data.yml")
-
     companion object {
+        private lateinit var configFile: File
+        private lateinit var dataFile: File
+        private lateinit var pluginFolder: File
 
         lateinit var commandRegex: Regex
         lateinit var plugin: CommandsToGui
@@ -24,6 +24,9 @@ class CommandsToGui : JavaPlugin() {
 
     override fun onLoad() {
         plugin = this
+        pluginFolder = dataFolder
+        configFile = File(pluginFolder, "modernConfig.yml")
+        dataFile = File(pluginFolder, "data.yml")
 
         saveDefaultConfig()
 
@@ -34,9 +37,7 @@ class CommandsToGui : JavaPlugin() {
     }
 
     override fun onEnable() {
-        server.asyncScheduler.runAtFixedRate(plugin, {
-            ConfigUtils.update(dataFile, ConfigUtils.dataSave)
-        }, ConfigUtils.config.saveDataEveryXMinutes, ConfigUtils.config.saveDataEveryXMinutes, TimeUnit.MINUTES)
+        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, UpdateFileTask(), ConfigUtils.config.saveDataEveryXTicks, ConfigUtils.config.saveDataEveryXTicks)
         GuiManager.init(this)
         GuiManager.guiConfigManager.setConfigFile<CommandsToGui>(config)
 
@@ -44,4 +45,12 @@ class CommandsToGui : JavaPlugin() {
         guiCommand()
         editItemCommand()
     }
+
+    class UpdateFileTask: BukkitRunnable() {
+        override fun run() {
+            ConfigUtils.update(dataFile, ConfigUtils.dataSave)
+        }
+
+    }
+
 }

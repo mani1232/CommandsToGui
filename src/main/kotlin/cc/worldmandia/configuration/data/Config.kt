@@ -9,7 +9,7 @@ data class Config(
     val prevPage: String = "&bPrev Page",
     val nextPage: String = "&bNext Page",
     val page: String = "&9&lPage",
-    val durationInSeconds: Long = 60,
-    val saveDataEveryXMinutes: Long = 5,
+    val cooldownInTicks: Long = 1200,
+    val saveDataEveryXTicks: Long = 6000,
     val commandsRegex: String = "/(?:msg|plugins)(?:\\s+\\S+)*"
 )
