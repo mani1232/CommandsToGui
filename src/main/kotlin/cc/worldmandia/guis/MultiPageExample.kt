@@ -34,9 +34,9 @@ class MultiPageExample(player: Player) : GuiMultiPageScreen(!ConfigUtils.config.
                                 ) else commandName
                             )
                             cooldownList.add(player.uniqueId)
-                            plugin.server.scheduler.runTaskTimerAsynchronously(plugin, RemoveTask(player), ConfigUtils.config.cooldownInTicks, ConfigUtils.config.cooldownInTicks)
+                            RemoveTask(player).runTaskTimerAsynchronously(plugin, ConfigUtils.config.cooldownInTicks, ConfigUtils.config.cooldownInTicks)
                         } else {
-                            player.sendMessage(!"You need wait 60 sec")
+                            player.sendMessage("You need wait 60 sec")
                         }
                     }
                 }

@@ -86,7 +86,7 @@ fun editItemCommand() = "ctg"<CommandSender> {
                         matches { result.isPresent }
                         runs {
                             newItemData.displayName = result.get()
-                            conversable.sendMessage(!"&7Item name updated")
+                            conversable.sendMessage("&7Item name updated")
                         }
                     }
 
@@ -95,7 +95,7 @@ fun editItemCommand() = "ctg"<CommandSender> {
                         matches { result.isPresent }
                         runs {
                             newItemData.itemLore = result.get()
-                            conversable.sendMessage(!"&7Item lore updated")
+                            conversable.sendMessage("&7Item lore updated")
                         }
                     }
 
@@ -104,7 +104,7 @@ fun editItemCommand() = "ctg"<CommandSender> {
                         matches { result.isPresent }
                         runs {
                             newItemData.material = result.get().toString()
-                            conversable.sendMessage(!"&7Item material updated")
+                            conversable.sendMessage("&7Item material updated")
                         }
                     }
 
@@ -113,7 +113,7 @@ fun editItemCommand() = "ctg"<CommandSender> {
                         matches { result.isPresent }
                         runs {
                             newItemData.commandExecuteType = result.get()
-                            conversable.sendMessage(!"&7Item CommandExecuteType updated")
+                            conversable.sendMessage("&7Item CommandExecuteType updated")
                         }
                     }
                 } timeout 60 begin sender

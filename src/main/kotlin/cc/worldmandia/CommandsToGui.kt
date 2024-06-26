@@ -7,11 +7,15 @@ import cc.worldmandia.configuration.data.Config
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.events.commandInputEvent
 import com.mattmx.ktgui.GuiManager
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
 
+
 class CommandsToGui : JavaPlugin() {
+
+    private var adventure: BukkitAudiences? = null
 
     companion object {
         private lateinit var configFile: File
@@ -37,13 +41,19 @@ class CommandsToGui : JavaPlugin() {
     }
 
     override fun onEnable() {
-        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, UpdateFileTask(), ConfigUtils.config.saveDataEveryXTicks, ConfigUtils.config.saveDataEveryXTicks)
+        this.adventure = BukkitAudiences.create(this)
+
+        UpdateFileTask().runTaskTimerAsynchronously(plugin, ConfigUtils.config.saveDataEveryXTicks, ConfigUtils.config.saveDataEveryXTicks)
         GuiManager.init(this)
         GuiManager.guiConfigManager.setConfigFile<CommandsToGui>(config)
 
         commandInputEvent()
         guiCommand()
         editItemCommand()
+    }
+
+    override fun onDisable() {
+        this.adventure?.close()
     }
 
     class UpdateFileTask: BukkitRunnable() {
