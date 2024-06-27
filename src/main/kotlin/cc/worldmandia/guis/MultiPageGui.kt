@@ -8,7 +8,6 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.items.setLore
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -33,9 +32,7 @@ class MultiPageGui(player: Player) {
                         val item = ItemStack(Material.getMaterial(it.second.material) ?: Material.STONE)
                         val meta = item.itemMeta!!
                         meta.setDisplayName(it.second.displayName)
-                        meta.setLore {
-                            it.second.itemLore?.unaryPlus()
-                        }
+                        meta.lore = it.second.itemLore ?: mutableListOf()
                         item.setItemMeta(meta)
                         item
                     },
@@ -55,6 +52,21 @@ class MultiPageGui(player: Player) {
                         }
                     }
                 )
+                val resetBtnData = ConfigUtils.config.resetButton
+
+                if (resetBtnData != null) {
+                    val resetBtn = ItemStack(Material.getMaterial(resetBtnData.material) ?: Material.COMPASS)
+                    val meta = resetBtn.itemMeta!!
+                    meta.setDisplayName(resetBtnData.displayName)
+                    meta.lore = resetBtnData.lore
+                    resetBtn.setItemMeta(meta)
+
+                    button(Slots.RowThreeSlotNine, resetBtn) {
+                        it.bukkitEvent.isCancelled = true
+                        plugin.server.dispatchCommand(plugin.server.consoleSender, resetBtnData.command)
+                    }
+                }
+
                 val item = ItemStack(Material.ARROW)
                 val meta = item.itemMeta!!
                 meta.setDisplayName(ConfigUtils.config.nextPage)

@@ -13,7 +13,7 @@ data class DataSave(
     @Serializable
     data class CustomGuiItem(
         var displayName: String? = null,
-        var itemLore: String? = null,
+        var itemLore: MutableList<String>? = null,
         var material: String = Material.STONE.toString(),
         var commandExecuteType: CommandExecuteType = CommandExecuteType.CONSOLE,
     )

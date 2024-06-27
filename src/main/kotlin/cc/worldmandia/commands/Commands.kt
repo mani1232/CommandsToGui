@@ -42,7 +42,7 @@ fun mainCtgCommand() = commandAPICommand("ctg") {
                     }
 
                     EditType.LORE -> {
-                        commandData.itemLore = newValue
+                        commandData.itemLore?.add(newValue)
                     }
 
                     EditType.MATERIAL -> {
@@ -72,8 +72,10 @@ fun mainCtgCommand() = commandAPICommand("ctg") {
             val player: Player = commandArguments["player"] as Player
             when (type) {
                 "add" -> {
-                    if (!ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }.contains(newValue)) {
-                        ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }.add(newValue)
+                    if (!ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
+                            .contains(newValue)) {
+                        ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
+                            .add(newValue)
                         commandSender.sendMessage("Force added")
                     } else {
                         commandSender.sendMessage("Already have")
