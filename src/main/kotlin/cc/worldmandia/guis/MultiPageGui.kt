@@ -50,6 +50,8 @@ class MultiPageGui(player: Player) {
                             )
                             cooldownList.add(player.uniqueId)
                             RemoveTask(player).runTaskLaterAsynchronously(plugin, ConfigUtils.config.cooldownInTicks)
+                        } else {
+                            player.sendMessage(ConfigUtils.config.guiInCooldown)
                         }
                     }
                 )
@@ -67,7 +69,11 @@ class MultiPageGui(player: Player) {
                     Slots.RowSixSlotNine,
                     item, compound, scrollTimes = 6, reverse = true
                 )
-                compound.addContent(ConfigUtils.dataSave.commandsData.filter { ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.contains(it.key) ?: false }.map { it.key to it.value })
+                compound.addContent(ConfigUtils.dataSave.commandsData.filter {
+                    ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.contains(
+                        it.key
+                    ) ?: false
+                }.map { it.key to it.value })
             }
         }
         player.openGUI(gui)
