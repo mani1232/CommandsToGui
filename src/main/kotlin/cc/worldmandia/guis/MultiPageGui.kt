@@ -45,9 +45,9 @@ class MultiPageGui(player: Player) {
                         if (!cooldownList.contains(player.uniqueId) || player.hasPermission("ctg.bypass")) {
                             plugin.server.dispatchCommand(
                                 if (element.second.commandExecuteType == DataSave.CommandExecuteType.PLAYER) player else plugin.server.consoleSender,
-                                if (element.second.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) element.first.substring(
+                                (if (element.second.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) element.first.substring(
                                     1
-                                ) else element.first
+                                ) else element.first).replace("%player%", player.name)
                             )
                             cooldownList.add(player.uniqueId)
                             RemoveTask(player).runTaskLaterAsynchronously(plugin, ConfigUtils.config.cooldownInTicks)

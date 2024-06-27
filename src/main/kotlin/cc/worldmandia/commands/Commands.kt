@@ -16,11 +16,17 @@ fun guiCommand() = commandAPICommand(ConfigUtils.config.menuCommandName) {
 
 fun mainCtgCommand() = commandAPICommand("ctg") {
     permission = CommandPermission.fromString("ctg.command.ctg")
+    val commands = if (ConfigUtils.dataSave.commandsData.keys.isNotEmpty()) ConfigUtils.dataSave.commandsData.keys.map {
+        it.replace(
+            " ",
+            "|"
+        )
+    } else listOf(" ")
     subcommand("editItem") {
         permission = CommandPermission.fromString("ctg.command.editItem")
         multiLiteralArgument(
             nodeName = "command",
-            *ConfigUtils.dataSave.commandsData.keys.map { it.replace(" ", "|") }.toTypedArray(),
+            *commands.toTypedArray(),
             optional = false
         )
         multiLiteralArgument(nodeName = "type", *EditType.entries.map { it.name }.toTypedArray(), optional = false)
