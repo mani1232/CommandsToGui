@@ -63,7 +63,7 @@ class MultiPageGui(player: Player) {
 
                     button(Slots.RowThreeSlotNine, resetBtn) {
                         it.bukkitEvent.isCancelled = true
-                        plugin.server.dispatchCommand(plugin.server.consoleSender, resetBtnData.command)
+                        plugin.server.dispatchCommand(plugin.server.consoleSender, resetBtnData.command.replace("%player%", player.name))
                     }
                 }
 
