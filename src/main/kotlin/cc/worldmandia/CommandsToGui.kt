@@ -38,8 +38,6 @@ class CommandsToGui : KSpigot() {
 
         ConfigUtils.config = ConfigUtils.load(configFile, Config())
         ConfigUtils.dataSave = ConfigUtils.load(dataFile, DataSave())
-
-        commandRegex = Regex(ConfigUtils.config.commandsRegex)
     }
 
     override fun startup() {
@@ -52,7 +50,11 @@ class CommandsToGui : KSpigot() {
             ConfigUtils.config.saveDataEveryXTicks
         )
 
-        plugin.server.pluginManager.registerEvents(CommandListeners(), this)
+        if (ConfigUtils.config.commandsRegex != null) {
+            commandRegex = Regex(ConfigUtils.config.commandsRegex!!)
+            plugin.server.pluginManager.registerEvents(CommandListeners(), this)
+        }
+
         guiCommand()
         mainCtgCommand()
     }

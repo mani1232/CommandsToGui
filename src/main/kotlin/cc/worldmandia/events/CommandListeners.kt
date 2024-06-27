@@ -12,8 +12,9 @@ class CommandListeners : Listener {
     @EventHandler
     fun onPlayerCommandPreprocessEvent(event: PlayerCommandPreprocessEvent) {
         if (CommandsToGui.commandRegex.matches(event.message)) {
-            ConfigUtils.dataSave.playerData.getOrPut(event.player.uniqueId.toString()) { mutableListOf() }
-                .add(event.message)
+            if (!ConfigUtils.dataSave.playerData.getOrPut(event.player.uniqueId.toString()) { mutableListOf() }.contains(event.message)) {
+                ConfigUtils.dataSave.playerData.getOrPut(event.player.uniqueId.toString()) { mutableListOf() }.add(event.message)
+            }
             ConfigUtils.dataSave.commandsData.putIfAbsent(event.message, DataSave.CustomGuiItem())
         }
     }

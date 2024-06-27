@@ -1,6 +1,5 @@
 package cc.worldmandia.commands
 
-import cc.worldmandia.CommandsToGui.Companion.plugin
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.guis.MultiPageGui
@@ -73,10 +72,13 @@ fun mainCtgCommand() = commandAPICommand("ctg") {
             val player: Player = commandArguments["player"] as Player
             when (type) {
                 "add" -> {
-                    ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
-                        .add(newValue)
+                    if (!ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }.contains(newValue)) {
+                        ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }.add(newValue)
+                        commandSender.sendMessage("Force added")
+                    } else {
+                        commandSender.sendMessage("Already have")
+                    }
                     ConfigUtils.dataSave.commandsData.putIfAbsent(newValue, DataSave.CustomGuiItem())
-                    commandSender.sendMessage("Force added")
                 }
 
                 "remove" -> {

@@ -10,5 +10,5 @@ data class Config(
     val nextPage: String = "§bNext Page",
     val cooldownInTicks: Long = 1200,
     val saveDataEveryXTicks: Long = 6000,
-    val commandsRegex: String = "/(?:msg|plugins)(?:\\s+\\S+)*"
+    val commandsRegex: String? = "/(?:msg|plugins)(?:\\s+\\S+)*"
 )
