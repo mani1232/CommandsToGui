@@ -18,9 +18,7 @@ fun guiCommand() = commandAPICommand(ConfigUtils.config.menuCommandName) {
 
 fun mainCtgCommand() = commandAPICommand("ctg") {
     permission = CommandPermission.fromString("ctg.command.ctg")
-    reloadCommand()
-    editCommand()
-    forceCommand()
+    subcommands = listOf(reloadCommand(), editCommand(), forceCommand())
 }
 
 fun reloadCommand() = subcommand("reload") {
