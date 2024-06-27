@@ -1,6 +1,7 @@
 package cc.worldmandia
 
 import cc.worldmandia.commands.guiCommand
+import cc.worldmandia.commands.mainCtgCommand
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.Config
 import cc.worldmandia.configuration.data.DataSave
@@ -45,10 +46,15 @@ class CommandsToGui : KSpigot() {
         this.adventure = BukkitAudiences.create(this)
         CommandAPI.onEnable()
 
-        UpdateFileTask().runTaskTimerAsynchronously(plugin, ConfigUtils.config.saveDataEveryXTicks, ConfigUtils.config.saveDataEveryXTicks)
+        UpdateFileTask().runTaskTimerAsynchronously(
+            plugin,
+            ConfigUtils.config.saveDataEveryXTicks,
+            ConfigUtils.config.saveDataEveryXTicks
+        )
 
         plugin.server.pluginManager.registerEvents(CommandListeners(), this)
         guiCommand()
+        mainCtgCommand()
     }
 
     override fun shutdown() {
@@ -56,7 +62,7 @@ class CommandsToGui : KSpigot() {
         this.adventure?.close()
     }
 
-    class UpdateFileTask: BukkitRunnable() {
+    class UpdateFileTask : BukkitRunnable() {
         override fun run() {
             ConfigUtils.update(dataFile, ConfigUtils.dataSave)
         }

@@ -1,10 +1,11 @@
 package cc.worldmandia.commands
 
 import cc.worldmandia.configuration.ConfigUtils
+import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.guis.MultiPageGui
 import dev.jorel.commandapi.CommandPermission
-import dev.jorel.commandapi.kotlindsl.commandAPICommand
-import dev.jorel.commandapi.kotlindsl.playerExecutor
+import dev.jorel.commandapi.kotlindsl.*
+import org.bukkit.entity.Player
 
 fun guiCommand() = commandAPICommand(ConfigUtils.config.menuCommandName) {
     permission = CommandPermission.fromString("ctg.command.gui")
@@ -12,103 +13,83 @@ fun guiCommand() = commandAPICommand(ConfigUtils.config.menuCommandName) {
         MultiPageGui(player)
     }
 }
-//
-//fun editItemCommand() = "ctg"<CommandSender> {
-//    buildAutomaticPermissions("ctg.command")
-//    val commandName by argument<String>("name", true)
-//    val player by argument<Player>("player")
-//
-//    runs {
-//        sender.sendMessage("Main command")
-//    }
-//
-//    subcommand<CommandSender>("force") {
-//
-//        subcommand<CommandSender>("add" / player / commandName) {
-//            commandName suggests { ConfigUtils.dataSave.commandsData.keys.toList() }
-//
-//            runs {
-//                val cmd = commandName()
-//                ConfigUtils.dataSave.playerData.getOrPut(player().uniqueId.toString()) { mutableListOf() }.add(cmd)
-//                ConfigUtils.dataSave.commandsData.putIfAbsent(cmd, DataSave.CustomGuiItem())
-//                sender.sendMessage("Force added")
-//            }
-//        }
-//
-//        subcommand<CommandSender>("remove" / player / commandName) {
-//            commandName suggests { ConfigUtils.dataSave.commandsData.keys.toList() }
-//
-//            runs {
-//                val cmd = commandName()
-//                ConfigUtils.dataSave.playerData.getOrPut(player().uniqueId.toString()) { mutableListOf() }.remove(cmd)
-//                sender.sendMessage("Force removed")
-//            }
-//        }
-//
-//        runs {
-//            sender.sendMessage("Force command")
-//        }
-//
-//    }
-//
-//    subcommand<Player>("editItem" / commandName) {
-//        commandName suggests { ConfigUtils.dataSave.commandsData.keys.toList() }
-//
-//        runs {
-//            val cmdName = commandName()
-//            if (ConfigUtils.dataSave.commandsData.containsKey(cmdName)) {
-//                val newItemData = DataSave.CustomGuiItem()
-//                conversation<Player> {
-//                    exitOn = "cancel"
-//
-//                    exit {
-//                        ConfigUtils.dataSave.commandsData[cmdName] = newItemData
-//                    }
-//
-//                    start {
-//                        sender.sendMessage("Start editing item...")
-//                    }
-//
-//                    getString {
-//                        message = !"&7Please input a item name"
-//                        matches { result.isPresent }
-//                        runs {
-//                            newItemData.displayName = result.get()
-//                            conversable.sendMessage("&7Item name updated")
-//                        }
-//                    }
-//
-//                    getString {
-//                        message = !"&7Please input a item lore"
-//                        matches { result.isPresent }
-//                        runs {
-//                            newItemData.itemLore = result.get()
-//                            conversable.sendMessage("&7Item lore updated")
-//                        }
-//                    }
-//
-//                    getEnum<Material, Player> {
-//                        message = !"&7Please input a material"
-//                        matches { result.isPresent }
-//                        runs {
-//                            newItemData.material = result.get().toString()
-//                            conversable.sendMessage("&7Item material updated")
-//                        }
-//                    }
-//
-//                    getEnum<DataSave.CommandExecuteType, Player> {
-//                        message = !"&7Please input a CommandExecuteType"
-//                        matches { result.isPresent }
-//                        runs {
-//                            newItemData.commandExecuteType = result.get()
-//                            conversable.sendMessage("&7Item CommandExecuteType updated")
-//                        }
-//                    }
-//                } timeout 60 begin sender
-//                ConfigUtils.dataSave.commandsData[cmdName] = newItemData
-//            }
-//
-//        }
-//    }
-//
-//}.register(false)
+
+fun mainCtgCommand() = commandAPICommand("ctg") {
+    permission = CommandPermission.fromString("ctg.command.ctg")
+    subcommand("editItem") {
+        permission = CommandPermission.fromString("ctg.command.editItem")
+        multiLiteralArgument(
+            nodeName = "command",
+            *ConfigUtils.dataSave.commandsData.keys.map { it.replace(" ", "|") }.toTypedArray(),
+            optional = false
+        )
+        multiLiteralArgument(nodeName = "type", *EditType.entries.map { it.name }.toTypedArray(), optional = false)
+        greedyStringArgument("newValue", false)
+        anyExecutor { commandSender, commandArguments ->
+            val command: String = (commandArguments["command"] as String).replace("|", " ")
+            val newValue: String = commandArguments["newValue"] as String
+            val editType: EditType = EditType.valueOf(commandArguments["player"] as String)
+            val commandData = ConfigUtils.dataSave.commandsData[command]
+            if (commandData != null) {
+                when (editType) {
+                    EditType.NAME -> {
+                        commandData.displayName = newValue
+                    }
+
+                    EditType.LORE -> {
+                        commandData.itemLore = newValue
+                    }
+
+                    EditType.MATERIAL -> {
+                        commandData.material = newValue
+                    }
+
+                    EditType.EXECUTOR -> {
+                        commandData.commandExecuteType = DataSave.CommandExecuteType.valueOf(newValue.uppercase())
+                    }
+                }
+                ConfigUtils.dataSave.commandsData[command] = commandData
+                commandSender.sendMessage("Edit ${editType.name} for command: $command")
+            } else {
+                commandSender.sendMessage("Command not found")
+            }
+        }
+    }
+    subcommand("force") {
+        permission = CommandPermission.fromString("ctg.command.force")
+        playerArgument("player", false)
+        multiLiteralArgument(nodeName = "type", "add", "remove", optional = false)
+        greedyStringArgument("command", false)
+
+        anyExecutor { commandSender, commandArguments ->
+            val newValue: String = commandArguments["command"] as String
+            val type: String = commandArguments["type"] as String
+            val player: Player = commandArguments["player"] as Player
+            when (type) {
+                "add" -> {
+                    ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
+                        .add(newValue)
+                    ConfigUtils.dataSave.commandsData.putIfAbsent(newValue, DataSave.CustomGuiItem())
+                    commandSender.sendMessage("Force added")
+                }
+
+                "remove" -> {
+                    ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
+                        .remove(newValue)
+                    commandSender.sendMessage("Force removed")
+                }
+
+                else -> {
+                    commandSender.sendMessage("$type not found")
+                }
+            }
+        }
+    }
+}
+
+enum class EditType {
+    NAME,
+    LORE,
+    MATERIAL,
+    EXECUTOR
+}
