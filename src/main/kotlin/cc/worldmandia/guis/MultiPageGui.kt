@@ -9,6 +9,7 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
+import net.axay.kspigot.items.setLore
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -31,8 +32,11 @@ class MultiPageGui(player: Player) {
                     Slots.RowOneSlotOne, Slots.RowSixSlotEight,
                     iconGenerator = {
                         val item = ItemStack(Material.getMaterial(it.second.material) ?: Material.STONE)
-                        val meta = item.itemMeta
-
+                        val meta = item.itemMeta!!
+                        meta.setDisplayName(it.second.displayName)
+                        meta.setLore {
+                            it.second.itemLore?.unaryPlus()
+                        }
                         item.setItemMeta(meta)
                         item
                     },
