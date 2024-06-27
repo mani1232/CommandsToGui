@@ -19,7 +19,7 @@ class CommandsToGui : KSpigot() {
     private var adventure: BukkitAudiences? = null
 
     companion object {
-        private lateinit var configFile: File
+        lateinit var configFile: File
         private lateinit var dataFile: File
         private lateinit var pluginFolder: File
 
