@@ -11,7 +11,6 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://maven.pvphub.me/releases/")
 }
 
 dependencies {
@@ -20,7 +19,9 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.3")
     implementation("com.charleskorn.kaml:kaml-jvm:0.60.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.1")
-    implementation("com.mattmx:ktgui:2.4.0")
+    compileOnly("net.axay:kspigot:1.20.3")
+    implementation("dev.jorel:commandapi-bukkit-shade:9.5.1")
+    implementation("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
 }
 
 kotlin {
@@ -29,6 +30,6 @@ kotlin {
 
 tasks {
     shadowJar {
-        relocate("com.mattmx", "$group.ktgui")
+        relocate("dev.jorel.commandapi", "$group.commandapi")
     }
 }

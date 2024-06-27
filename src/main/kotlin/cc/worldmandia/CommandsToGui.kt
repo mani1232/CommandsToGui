@@ -1,19 +1,19 @@
 package cc.worldmandia
 
-import cc.worldmandia.commands.editItemCommand
 import cc.worldmandia.commands.guiCommand
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.Config
 import cc.worldmandia.configuration.data.DataSave
-import cc.worldmandia.events.commandInputEvent
-import com.mattmx.ktgui.GuiManager
+import cc.worldmandia.events.CommandListeners
+import dev.jorel.commandapi.CommandAPI
+import dev.jorel.commandapi.CommandAPIBukkitConfig
+import net.axay.kspigot.main.KSpigot
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
 
 
-class CommandsToGui : JavaPlugin() {
+class CommandsToGui : KSpigot() {
 
     private var adventure: BukkitAudiences? = null
 
@@ -26,8 +26,9 @@ class CommandsToGui : JavaPlugin() {
         lateinit var plugin: CommandsToGui
     }
 
-    override fun onLoad() {
+    override fun load() {
         plugin = this
+        CommandAPI.onLoad(CommandAPIBukkitConfig(plugin).silentLogs(true))
         pluginFolder = dataFolder
         configFile = File(pluginFolder, "modernConfig.yml")
         dataFile = File(pluginFolder, "data.yml")
@@ -40,19 +41,18 @@ class CommandsToGui : JavaPlugin() {
         commandRegex = Regex(ConfigUtils.config.commandsRegex)
     }
 
-    override fun onEnable() {
+    override fun startup() {
         this.adventure = BukkitAudiences.create(this)
+        CommandAPI.onEnable()
 
         UpdateFileTask().runTaskTimerAsynchronously(plugin, ConfigUtils.config.saveDataEveryXTicks, ConfigUtils.config.saveDataEveryXTicks)
-        GuiManager.init(this)
-        GuiManager.guiConfigManager.setConfigFile<CommandsToGui>(config)
 
-        commandInputEvent()
+        plugin.server.pluginManager.registerEvents(CommandListeners(), this)
         guiCommand()
-        editItemCommand()
     }
 
-    override fun onDisable() {
+    override fun shutdown() {
+        CommandAPI.onDisable()
         this.adventure?.close()
     }
 
