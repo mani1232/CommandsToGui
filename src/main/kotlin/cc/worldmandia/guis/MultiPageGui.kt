@@ -4,7 +4,6 @@ import cc.worldmandia.CommandsToGui.Companion.plugin
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.configuration.data.DataSave.CustomGuiItem
-import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
