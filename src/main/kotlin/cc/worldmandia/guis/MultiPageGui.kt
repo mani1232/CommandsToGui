@@ -53,15 +53,21 @@ class MultiPageGui(player: Player) {
                         }
                     }
                 )
+                val item = ItemStack(Material.ARROW)
+                val meta = item.itemMeta!!
+                meta.setDisplayName(ConfigUtils.config.nextPage)
+                item.setItemMeta(meta)
                 compoundScroll(
                     Slots.RowOneSlotNine,
-                    ItemStack(Material.PAPER), compound, scrollTimes = 6
+                    item, compound, scrollTimes = 6
                 )
+                meta.setDisplayName(ConfigUtils.config.prevPage)
+                item.setItemMeta(meta)
                 compoundScroll(
                     Slots.RowSixSlotNine,
-                    ItemStack(Material.PAPER), compound, scrollTimes = 6, reverse = true
+                    item, compound, scrollTimes = 6, reverse = true
                 )
-                compound.addContent(ConfigUtils.dataSave.commandsData.map { it.key to it.value })
+                compound.addContent(ConfigUtils.dataSave.commandsData.filter { ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.contains(it.key) ?: false }.map { it.key to it.value })
             }
         }
         player.openGUI(gui)

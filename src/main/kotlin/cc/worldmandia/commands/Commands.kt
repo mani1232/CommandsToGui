@@ -1,5 +1,6 @@
 package cc.worldmandia.commands
 
+import cc.worldmandia.CommandsToGui.Companion.plugin
 import cc.worldmandia.configuration.ConfigUtils
 import cc.worldmandia.configuration.data.DataSave
 import cc.worldmandia.guis.MultiPageGui
@@ -79,8 +80,7 @@ fun mainCtgCommand() = commandAPICommand("ctg") {
                 }
 
                 "remove" -> {
-                    ConfigUtils.dataSave.playerData.getOrPut(player.uniqueId.toString()) { mutableListOf() }
-                        .remove(newValue)
+                    ConfigUtils.dataSave.playerData[player.uniqueId.toString()]?.remove(newValue)
                     commandSender.sendMessage("Force removed")
                 }
 
