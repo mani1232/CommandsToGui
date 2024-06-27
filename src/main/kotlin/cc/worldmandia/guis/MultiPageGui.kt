@@ -25,7 +25,7 @@ class MultiPageGui(player: Player) {
 
     init {
         val gui = kSpigotGUI(GUIType.SIX_BY_NINE) {
-            title = literalText(ConfigUtils.config.menuTitle)
+            title = ConfigUtils.config.menuTitle
 
             page(1) {
                 val compound = createRectCompound<Pair<String, CustomGuiItem>>(

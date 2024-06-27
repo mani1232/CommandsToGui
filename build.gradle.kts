@@ -19,7 +19,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.3")
     implementation("com.charleskorn.kaml:kaml-jvm:0.60.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.1")
-    implementation("net.axay:kspigot:1.20.3")
+    implementation("net.axay:kspigot:1.17.4")
     implementation("dev.jorel:commandapi-bukkit-shade:9.5.1")
     implementation("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
 }
