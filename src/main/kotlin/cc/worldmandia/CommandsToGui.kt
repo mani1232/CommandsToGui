@@ -58,6 +58,7 @@ class CommandsToGui : KSpigot() {
     }
 
     override fun shutdown() {
+        ConfigUtils.update(dataFile, ConfigUtils.dataSave)
         CommandAPI.onDisable()
         this.adventure?.close()
     }
