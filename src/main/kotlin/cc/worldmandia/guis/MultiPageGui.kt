@@ -43,7 +43,7 @@ class MultiPageGui(player: Player) {
                                 if (element.second.commandExecuteType == DataSave.CommandExecuteType.PLAYER) player else plugin.server.consoleSender,
                                 (if (element.second.commandExecuteType == DataSave.CommandExecuteType.CONSOLE) element.first.substring(
                                     1
-                                ) else element.first).replace("%player%", player.name)
+                                ) else element.first).replace("[player]", player.name)
                             )
                             cooldownList.add(player.uniqueId)
                             RemoveTask(player).runTaskLaterAsynchronously(plugin, ConfigUtils.config.cooldownInTicks)
@@ -63,7 +63,7 @@ class MultiPageGui(player: Player) {
 
                     button(Slots.RowThreeSlotNine, resetBtn) {
                         it.bukkitEvent.isCancelled = true
-                        plugin.server.dispatchCommand(plugin.server.consoleSender, resetBtnData.command.replace("%player%", player.name))
+                        plugin.server.dispatchCommand(plugin.server.consoleSender, resetBtnData.command.replace("[player]", player.name))
                     }
                 }
 
