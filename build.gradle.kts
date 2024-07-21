@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("jvm") version "2.0.10-RC"
+    kotlin("plugin.serialization") version "2.0.10-RC"
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.10-RC")
     implementation("net.kyori:adventure-platform-bukkit:4.3.3")
     implementation("com.charleskorn.kaml:kaml-jvm:0.60.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.1")
@@ -32,5 +32,8 @@ tasks {
     shadowJar {
         relocate("dev.jorel.commandapi", "$group.commandapi")
         relocate("net.axay.kspigot", "$group.kspigot")
+        relocate("org.jetbrains.kotlin", "$group.kotlin")
+        relocate("com.charleskorn.kaml", "$group.kaml")
+        relocate("org.jetbrains.kotlinx", "$group.kotlinx")
     }
 }
